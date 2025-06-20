@@ -6,17 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chat App</title>
   <style>
+    :root {
+      --bxs: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
     .chat {
       display: flex;
       flex-direction: column;
       height: 80vh;
+      margin: 20px 100px;
+      padding: 10px;
+      box-shadow: var(--bxs);
+      border-radius: 10px;
     }
 
     .messages {
       flex: 1;
       overflow-y: auto;
       list-style: none;
-      padding: 0;
+      padding: 0 10px;
       margin: 0;
     }
 
@@ -36,20 +44,61 @@
       background: #eee;
       cursor: pointer;
     }
+
+    .message {
+      margin: 10px;
+      padding: 10px;
+      box-shadow: var(--bxs);
+      border-radius: 10px;
+    }
+
+    .chatheader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 50px;
+    }
+
+    .title {
+      color: rgb(53, 134, 255);
+    }
+
+    #canvas-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: var(--bxs);
+      margin: 20px 100px;
+      border-radius: 10px;
+      padding-bottom: 20px;
+    }
   </style>
 </head>
 
 <body>
   <div class="chat">
+    <div class="chatheader">
+      <h1 class="title">Chat</h1>
+      <p>
+        チャット数:
+        <span id="chatnum">0</span>
+      </p>
+    </div>
     <ul class="messages"></ul>
     <form class="form">
       <input class="input" autocomplete="off" />
       <button class="submit">Send</button>
     </form>
   </div>
-  <canvas id="canvas" width="600" height="600" style="border: solid 1px black"></canvas>
+  <div id="canvas-container">
+    <h1 class="title">共有キャンバス</h1>
+    <canvas id="canvas" width="600" height="600" style="border: solid 1px black"></canvas>
+  </div>
 
   <script>
+    let chatNum = 0
+
     function main() {
       const host = location.origin.replace(/^http/, 'ws')
       const ws = new WebSocket(host + '/ws')
@@ -127,12 +176,25 @@
           const { id, text } = msg
           const messageList = document.querySelector('.messages')
           const li = document.createElement('li')
+          const img = document.createElement('img')
+          const nameDiv = document.createElement('div')
+          nameDiv.classList.add(".name-div")
+          img.src = `https://api.dicebear.com/9.x/identicon/svg?seed=${id}`
+          img.width = 20
+          li.classList.add('message')
+          const span = document.createElement('span')
           if (id === myId) {
-            li.textContent = `(${id})自分:` + text
+            span.textContent = `(${id})自分:` + text
           } else {
-            li.textContent = id + ': ' + text
+            span.textContent = id + ': ' + text
           }
+          li.appendChild(img)
+          li.appendChild(span)
           messageList.appendChild(li)
+
+          chatNum++
+          const numSpan = document.getElementById('chatnum')
+          numSpan.textContent = chatNum
         }
       }
 
