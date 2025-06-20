@@ -5,75 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chat App</title>
-  <style>
-    :root {
-      --bxs: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    }
+  <link rel="stylesheet" href="./style.css">
 
-    .chat {
-      display: flex;
-      flex-direction: column;
-      height: 80vh;
-      margin: 20px 100px;
-      padding: 10px;
-      box-shadow: var(--bxs);
-      border-radius: 10px;
-    }
-
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      list-style: none;
-      padding: 0 10px;
-      margin: 0;
-    }
-
-    .form {
-      display: flex;
-    }
-
-    .input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-    }
-
-    .submit {
-      padding: 10px;
-      border: 1px solid #ccc;
-      background: #eee;
-      cursor: pointer;
-    }
-
-    .message {
-      margin: 10px;
-      padding: 10px;
-      box-shadow: var(--bxs);
-      border-radius: 10px;
-    }
-
-    .chatheader {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 50px;
-    }
-
-    .title {
-      color: rgb(53, 134, 255);
-    }
-
-    #canvas-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      box-shadow: var(--bxs);
-      margin: 20px 100px;
-      border-radius: 10px;
-      padding-bottom: 20px;
-    }
-  </style>
 </head>
 
 <body>
@@ -177,19 +110,24 @@
           const messageList = document.querySelector('.messages')
           const li = document.createElement('li')
           const img = document.createElement('img')
-          const nameDiv = document.createElement('div')
-          nameDiv.classList.add(".name-div")
+          const headDiv = document.createElement('div')
+          const textDiv = document.createElement('div')
+          headDiv.classList.add("name-div")
           img.src = `https://api.dicebear.com/9.x/identicon/svg?seed=${id}`
-          img.width = 20
+          img.width = 30
           li.classList.add('message')
           const span = document.createElement('span')
           if (id === myId) {
-            span.textContent = `(${id})自分:` + text
+            span.textContent = `(${id})自分:`
+            li.classList.add('mymessage')
           } else {
-            span.textContent = id + ': ' + text
+            span.textContent = id + ': '
           }
-          li.appendChild(img)
-          li.appendChild(span)
+          textDiv.textContent = text;
+          headDiv.appendChild(img)
+          headDiv.appendChild(span)
+          li.appendChild(headDiv)
+          li.appendChild(textDiv)
           messageList.appendChild(li)
 
           chatNum++
